@@ -27,21 +27,21 @@ void lerTabuleiro(const char *arquivo) {
     fclose(file);
 }
 
-void lerPalavras(const char *arquivoParametro, Trie *raiz) {
-    FILE *arquivo = fopen(arquivoParametro, "r");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir lista de palavras\n");
-        return;
-    }
+// void lerPalavras(const char *arquivoParametro, Trie *raiz) {
+//     FILE *arquivo = fopen(arquivoParametro, "r");
+//     if (arquivo == NULL) {
+//         printf("Erro ao abrir lista de palavras\n");
+//         return;
+//     }
      
-    char palavra[30];
-    while (fgets(palavra, sizeof(palavra), arquivo)) {
-        palavra[strcspn(palavra, "\n")] = '\0'; 
-        inserirTrie(raiz, palavra);
-    }
+//     char palavra[30];
+//     while (fgets(palavra, sizeof(palavra), arquivo)) {
+//         palavra[strcspn(palavra, "\n")] = '\0'; 
+//         inserirTrie(raiz, palavra);
+//     }
 
-    fclose(arquivo);
-}
+//     fclose(arquivo);
+// }
 
 void buscarDirecao(Trie *trie, ArvAVL **avl, int dx, int dy) {
     char palavra[30];
