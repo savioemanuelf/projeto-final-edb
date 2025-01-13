@@ -1,32 +1,9 @@
 #include "../cabecalhos/avl.h"
+#include "../cabecalhos/aux.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-int maior(int x, int y) {
-    if (x > y)
-        return x;
-    else
-        return y;
-}
-
-int altura(ArvAVL *no) {
-    if (no == NULL) {
-        return -1;
-    } else {
-        return no->altura;
-    }
-}
-
-int fatorBalanceamento(ArvAVL *no) {
-    if (no == NULL) {
-        return 0;
-    } else {
-        return altura(no->esquerdo) - altura(no->direito);
-    }
-
-}
 
 ArvAVL *criarArvAVL(const char *palavra) {
     ArvAVL *novo = (ArvAVL *)malloc(sizeof(ArvAVL));
@@ -38,51 +15,84 @@ ArvAVL *criarArvAVL(const char *palavra) {
     return novo;
 }
 
-ArvAVL *rotacaoDireita(ArvAVL *no) {
-    ArvAVL *aux = no->esquerdo;
-    ArvAVL *aux2 = aux->direito;
-
-    aux->direito = no;
-    no->esquerdo = aux2;
-
-    no->altura = 1 + maior(altura(no->esquerdo), altura(no->direito));
-    aux->altura = 1 + maior(altura(aux->esquerdo), altura(aux->direito));
-    return aux;
+int obterAltura(ArvAVL *no) {
+    if (no == NULL) {
+        return -1;
+    } else {
+        return no->altura;
+    }
 }
 
-ArvAVL *rotacaoEsquerda(ArvAVL *no) {
-    ArvAVL *aux1 = no->direito;
-    ArvAVL *aux2 = aux1->esquerdo;
+int calcularFatorBalanceamento(ArvAVL *no) {
+    if (no == NULL) {
+        return 0;
+    } else {
+        return obterAltura(no->esquerdo) - obterAltura(no->direito);
+    }
 
-    aux1->esquerdo = no;
-    no->direito = aux2;
-
-    no->altura = 1 + maior(altura(no->esquerdo), altura(no->direito));
-    aux1->altura = 1 + maior(altura(aux1->esquerdo), altura(aux1->direito));
-    return aux1;
 }
 
-ArvAVL *balancearNo(ArvAVL *no) {
-    int balanceamento = fatorBalanceamento(no);
+ArvAVL* rotacaoDireita(ArvAVL* y) {
+  ArvAVL* x = y->esquerdo;
+  ArvAVL* z = x->direito;
 
-    // rotação simples direito
-    if (balanceamento > 1 && fatorBalanceamento(no->esquerdo) >= 0) {
+  x->direito = y;
+  y->esquerdo = z;
+
+  if(obterAltura(y->esquerdo) > obterAltura(y->direito))
+    y->altura = 1 + obterAltura(y->esquerdo);
+  else
+    y->altura = 1 + obterAltura(y->direito);
+
+  if(obterAltura(x->esquerdo) > obterAltura(x->direito))
+    x->altura = 1 + obterAltura(x->esquerdo);
+  else
+    x->altura = 1 + obterAltura(x->direito);
+
+  return x;
+}
+
+ArvAVL* rotacaoEsquerda(ArvAVL* x) {
+  ArvAVL* y = x->direito;
+  ArvAVL* z = y->esquerdo;
+
+  y->esquerdo = x;
+  x->direito = z;
+
+  if(obterAltura(x->esquerdo) > obterAltura(x->direito))
+    x->altura = 1 + obterAltura(x->esquerdo);
+  else
+    x->altura = 1 + obterAltura(x->direito);
+
+  if (obterAltura(y->esquerdo) > obterAltura(y->direito))
+    y->altura = 1 + obterAltura(y->esquerdo);
+  else
+    y->altura = 1 + obterAltura(y->direito);
+
+  return y;
+}
+
+ArvAVL *balancear(ArvAVL* no) {
+    int balanceamento = calcularFatorBalanceamento(no);
+
+    // rotacao simples direito
+    if (balanceamento > 1 && calcularFatorBalanceamento(no->esquerdo) >= 0) {
         return rotacaoDireita(no);
     }
-    // rotação dupla direito
-    if (balanceamento > 1 && fatorBalanceamento(no->esquerdo) < 0) {
+    // rotacao dupla direito
+    if (balanceamento > 1 && calcularFatorBalanceamento(no->esquerdo) < 0) {
         no->esquerdo = rotacaoEsquerda(no->esquerdo);
 
         return rotacaoDireita(no);
     }
 
-    // rotação simples esquerdo
-    if (balanceamento < -1 && fatorBalanceamento(no->direito) <= 0) {
+    // rotacao simples esquerdo
+    if (balanceamento < -1 && calcularFatorBalanceamento(no->direito) <= 0) {
         return rotacaoEsquerda(no);
     }
 
-    // rotação dupla esquerdo
-    if (balanceamento < -1 && fatorBalanceamento(no->direito) > 0) {
+    // rotacao dupla esquerdo
+    if (balanceamento < -1 && calcularFatorBalanceamento(no->direito) > 0) {
         no->direito = rotacaoDireita(no->direito);
 
         return rotacaoEsquerda(no);
@@ -92,7 +102,6 @@ ArvAVL *balancearNo(ArvAVL *no) {
 }
 
 ArvAVL *inserirPalavraAVL(ArvAVL *raiz, const char *palavra) {
-    printf("Inserindo na AVL: %s\n", palavra);
     if (raiz == NULL) {
         return criarArvAVL(palavra);
     }
@@ -103,40 +112,84 @@ ArvAVL *inserirPalavraAVL(ArvAVL *raiz, const char *palavra) {
         raiz->direito = inserirPalavraAVL(raiz->direito, palavra);
     }
 
-    raiz->altura = 1 + maior(altura(raiz->esquerdo), altura(raiz->direito));
-    return balancearNo(raiz);
+    raiz->altura = 1 + max(obterAltura(raiz->esquerdo), obterAltura(raiz->direito));
+    return balancear(raiz);
 }
 
-
+// implementação feita com auxilio do codigo avl.c do sigaa
 ArvAVL *removerPalavraAVL(ArvAVL *raiz, const char *palavra) {
     if (raiz == NULL) {
         return raiz;
     }
+
+    // descendo a arvore para encontrar o no de remocao
     if (strcmp(palavra, raiz->palavra) < 0) {
         raiz->esquerdo = removerPalavraAVL(raiz->esquerdo, palavra);
     } else if (strcmp(palavra, raiz->palavra) > 0) {
         raiz->direito = removerPalavraAVL(raiz->direito, palavra);
     } else {
+        // Nó com apenas um filho ou nenhum.
         if (raiz->esquerdo == NULL || raiz->direito == NULL) {
             ArvAVL *temp = raiz->esquerdo ? raiz->esquerdo : raiz->direito;
+
+            // Caso de nenhum filho
             if (temp == NULL) {
                 temp = raiz;
                 raiz = NULL;
             } else {
+                // Caso de um filho
                 *raiz = *temp;
             }
             free(temp);
         } else {
+            // Caso de dois filhos: obtém o sucessor
             ArvAVL *temp = raiz->direito;
             while (temp->esquerdo != NULL) {
                 temp = temp->esquerdo;
             }
+
+            // Copia o sucessor para o nó a ser removido
             strcpy(raiz->palavra, temp->palavra);
+
+            // Remove o sucessor
             raiz->direito = removerPalavraAVL(raiz->direito, temp->palavra);
         }
     }
-    raiz->altura = 1 + maior(altura(raiz->esquerdo), altura(raiz->direito));
-    return balancearNo(raiz);
+
+    // Se a árvore tinha apenas um nó
+    if (raiz == NULL) {
+        return raiz;
+    }
+
+    // Atualiza a altura do nó atual
+    raiz->altura = 1 + max(obterAltura(raiz->esquerdo), obterAltura(raiz->direito));
+
+    // Balanceia a árvore, se necessário
+    int balanceamento = calcularFatorBalanceamento(raiz);
+
+    // Caso 1: Desbalanceamento a esquerda (rotacao a direita)
+    if (balanceamento > 1 && calcularFatorBalanceamento(raiz->esquerdo) >= 0) {
+        return rotacaoDireita(raiz);
+    }
+
+    // Caso 2: Desbalanceamento esquerda-direita (rotacao dupla esquerda-direita)
+    if (balanceamento > 1 && calcularFatorBalanceamento(raiz->esquerdo) < 0) {
+        raiz->esquerdo = rotacaoEsquerda(raiz->esquerdo);
+        return rotacaoDireita(raiz);
+    }
+
+    // Caso 3: Desbalanceamento a direita (rotacao a esquerda)
+    if (balanceamento < -1 && calcularFatorBalanceamento(raiz->direito) <= 0) {
+        return rotacaoEsquerda(raiz);
+    }
+
+    // Caso 4: Desbalanceamento direita-esquerda (rotacao dupla direita-esquerda)
+    if (balanceamento < -1 && calcularFatorBalanceamento(raiz->direito) > 0) {
+        raiz->direito = rotacaoDireita(raiz->direito);
+        return rotacaoEsquerda(raiz);
+    }
+
+    return raiz;
 }
 
 void imprimirArvOrdem(ArvAVL *raiz) {

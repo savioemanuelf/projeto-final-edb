@@ -7,4 +7,5 @@ void opcaoSelecionada(int opcao); // Exibe a opcao selecionada após limpar o te
 void adicionarPalavra(); // Adiciona palavra a ser buscada em palavras.txt
 void exibirPalavras(); // Exibe as palavras de palavras.txt
 void exibirTabuleiro(); // Exibe o tabuleir de tabuleiro.txt
+int max(int x, int y); // função auxiliar para calcular altura da arvore
 #endif // AUX_H

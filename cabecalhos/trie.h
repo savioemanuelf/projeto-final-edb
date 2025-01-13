@@ -10,7 +10,7 @@ typedef struct Trie {
 } Trie;
 
 Trie* criarTrie(); // cria trie
-void inserirTrie(Trie* raiz, const char* palavra); // insere palavra na trie
+void inserirPalavraTrie(Trie* raiz, const char* palavra); // insere palavra na trie
 void carregarPalavrasTrie(const char *arquivo, Trie *raiz); // Carrega palavras de um arquivo e insere na arvore trie utilizando
 // a função inserirPalavraTrie
 bool buscarPalavra(Trie* raiz, const char* palavra); // busca palavra na trie

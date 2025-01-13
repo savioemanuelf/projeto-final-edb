@@ -6,7 +6,7 @@
 Trie* criarTrie() {
     Trie* novaTrie = (Trie*)malloc(sizeof(Trie));
 
-    if (novaTrie) { 
+    if (novaTrie) {
         novaTrie->final_palavra = false;
         for (int i = 0; i < ALFABETO; i++) {
             novaTrie->letras[i] = NULL;
@@ -19,69 +19,10 @@ Trie* criarTrie() {
     return novaTrie;
 }
 
-void carregarPalavrasTrie(const char *arquivoParametro, Trie *raiz) {
-    FILE *arquivo = fopen(arquivoParametro, "r");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir lista de palavras\n");
-        return;
-    }
 
-    char linha[256];
-    printf("Carregando palavras na Trie:\n");
-    while (fgets(linha, sizeof(linha), arquivo)) {
-        linha[strcspn(linha, "\n")] = '\0'; // Remove o '\n'
-
-        // Dividir a linha em palavras
-        char *palavra = strtok(linha, " ");
-        while (palavra != NULL) {
-            printf("- Inserindo: %s\n", palavra);
-
-            // Inserir cada palavra na Trie
-            inserirTrie(raiz, palavra);
-
-            // Próxima palavra
-            palavra = strtok(NULL, " ");
-        }
-    }
-
-    fclose(arquivo);
-}
-
-void testarBusca(Trie* raiz, const char* palavra) {
-    if (buscarPalavra(raiz, palavra)) {
-        printf("Palavra encontrada na Trie: %s\n", palavra);
-    } else {
-        printf("Palavra NÃO encontrada na Trie: %s\n", palavra);
-    }
-}
-
-
-// void inserirPalavraTrie(Trie* raiz, const char* palavra) {
-//     Trie* atual = raiz;
-
-//     printf("Inserindo palavra: %s\n", palavra);
-//     while (*palavra) {
-//         int indice = *palavra - 'a';
-//         if (indice < 0 || indice >= ALFABETO) {
-//             printf("Caractere inválido na palavra: %c\n", *palavra);
-//             return;
-//         }
-
-//         if (atual->letras[indice] == NULL) {
-//             atual->letras[indice] = criarTrie();
-//         }
-
-//         atual = atual->letras[indice];
-//         palavra++;
-//     }
-
-//     atual->final_palavra = true;
-// }
-
-void inserirTrie(Trie* raiz, const char* palavra) {
+void inserirPalavraTrie(Trie* raiz, const char* palavra) {
     Trie* atual = raiz;
 
-    printf("Inserindo na Trie: %s\n", palavra);
     while (*palavra) {
         if (*palavra < 'a' || *palavra > 'z') {
             printf("Caractere inválido na palavra: %c\n", *palavra);
@@ -98,25 +39,33 @@ void inserirTrie(Trie* raiz, const char* palavra) {
     }
 
     atual->final_palavra = true;
-    printf("Palavra inserida com sucesso: %s\n", palavra);
 }
 
+void carregarPalavrasTrie(const char *arquivoParametro, Trie *raiz) {
+    FILE *arquivo = fopen(arquivoParametro, "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir lista de palavras\n");
+        return;
+    }
 
-// void inserirPalavraTrie(Trie* raiz, const char* palavra) {
-//     Trie* atual = raiz;
+    char linha[256];
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        linha[strcspn(linha, "\n")] = '\0';
 
-//     while (*palavra) {
-//         int indice = *palavra - 'a';
-//         if (atual->letras[indice] == NULL) {
-//             atual->letras[indice] = criarTrie();
-//         }
+        char *palavra = strtok(linha, " ");
+        while (palavra != NULL) {
 
-//         atual = atual->letras[indice];
-//         palavra++;
-//     }
+            // inserir palavra individualmente na Trie
+            inserirPalavraTrie(raiz, palavra);
 
-//     atual->final_palavra = true;
-// }
+            // próxima palavra, 
+            // strtok pesquisado na internet pois enfrentei problemas nessa função
+            palavra = strtok(NULL, " ");
+        }
+    }
+
+    fclose(arquivo);
+}
 
 bool buscarPalavra(Trie* raiz, const char* palavra) {
     Trie* atual = raiz;

@@ -22,7 +22,8 @@ void exibirMenu() {
     printf("3. Exibir tabuleiro\n");
     printf("4. Exibir lista de palavras\n");
     printf("5. Remover palavra da AVL\n");
-    printf("6. Sair\n");
+    printf("6. Visualizar AVL\n");
+    printf("7. Sair\n");
     printf("Escolha uma opcao: ");
 }
 
@@ -84,4 +85,11 @@ void exibirTabuleiro() {
     }
 
     fclose(arquivo);
+}
+
+int max(int x, int y) {
+    if (x > y)
+        return x;
+    else
+        return y;
 }

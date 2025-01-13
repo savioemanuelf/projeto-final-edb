@@ -11,7 +11,7 @@ int main() {
 
     int opcao = 0;
 
-    while (opcao != 6){
+    while (opcao != 7){
         printf("\n\nPressione enter para limpar o terminal e ver o menu: \n");
         getchar();
         exibirMenu();
@@ -19,70 +19,59 @@ int main() {
     
     
         switch (opcao) {
-        case 1:
-            opcaoSelecionada(1);
-            lerTabuleiro("tabuleiro.txt");
-            carregarPalavrasTrie("palavras.txt", trie); 
-            buscarPalavras(trie, &avl);
-            // imprimirArvOrdem(avl);
-            imprimirResultados(avl);
-            getchar();
-            testarBusca(trie, "agape");
-             testarBusca(trie, "europa");
-            testarBusca(trie, "leda");
-            
-            break;
-        case 2:
-            opcaoSelecionada(2);
-            adicionarPalavra();
-            break;
-        case 3:
-            opcaoSelecionada(3);
-            exibirTabuleiro();
-            getchar();
-            break;
-        case 4:
-            opcaoSelecionada(4);
-            exibirPalavras();
-            getchar();
-            break;
-        case 5:
-            opcaoSelecionada(5);
-            char palavra[30];
-            printf("\nDigite a palavra que deseja remover da AVL: ");
-            scanf(" %s", palavra);
-            
-            printf("\nAntes da remoção:\n");
-            imprimirArvOrdem(avl);  
+            case 1:
+                opcaoSelecionada(1);
+                lerTabuleiro("tabuleiro.txt");
+                carregarPalavrasTrie("palavras.txt", trie); 
+                buscarPalavras(trie, &avl);
+                imprimirResultados(avl);
+                getchar();
+                
+                break;
+            case 2:
+                opcaoSelecionada(2);
+                adicionarPalavra();
+                break;
+            case 3:
+                opcaoSelecionada(3);
+                exibirTabuleiro();
+                getchar();
+                break;
+            case 4:
+                opcaoSelecionada(4);
+                exibirPalavras();
+                getchar();
+                break;
+            case 5:
+                opcaoSelecionada(5);
+                char palavra[30];
+                printf("\nDigite a palavra que deseja remover da AVL: ");
+                scanf(" %s", palavra);
+                
+                avl = removerPalavraAVL(avl, palavra);
+                
+                imprimirArvOrdem(avl);  
 
-            // Remover a palavra
-            avl = removerPalavraAVL(avl, palavra);
-
-            printf("\nDepois da remoção:\n");
-            imprimirArvOrdem(avl);  // Função para imprimir a árvore
-
-            sleep(3);
-            break;
-        case 6:
-            liberarArvore(avl);
-            liberarTrie(trie);
-            printf("Saindo do programa...");
-            sleep(1.5);
-            break;
-        default:
-            printf("Opcao invalida. Tente novamente");
-            getchar();
-            break;
+                getchar();
+                break;
+            case 6:
+                opcaoSelecionada(6);
+                imprimirArvOrdem(avl);
+                getchar();
+                break;
+            case 7:
+                liberarArvore(avl);
+                liberarTrie(trie);
+                
+                printf("Saindo do programa...");
+                sleep(1.5);
+                break;
+            default:
+                printf("Opcao invalida. Tente novamente");
+                getchar();
+                break;
         }
     }
-
-    // lerTabuleiro("tabuleiro.txt");
-    // lerPalavras("palavras.txt", trie); 
-    // buscarPalavras(trie, &avl);
-    // imprimirResultados(avl);
     
-    // liberarArvore(avl);
-    // liberarTrie(trie);
-
     return 0;
 }
