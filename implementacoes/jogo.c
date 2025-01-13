@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "../cabecalhos/jogo.h"
 #include "../cabecalhos/avl.h"
 #include "../cabecalhos/trie.h"
@@ -8,22 +9,35 @@
 char tabuleiro[MAX][MAX];
 int numeroLinhas, numeroColunas;
 
-void lerTabuleiro(const char *arquivoParametro) {
-    FILE *arquivo = fopen(arquivoParametro, "r");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir o tabuleiro\n");
-        return;
-    } 
-  
-    char linha[MAX];
-    fscanf(arquivo, "%d %d", &numeroLinhas, &numeroColunas);
-    for (int i = 0; i < numeroLinhas; i++) {
-        if(fgets(linha, sizeof(linha), arquivo)) {
-            for (int j = 0; j < numeroColunas; j++) { // substituir por numeroColunas para permitir tabuleiros nao quadrados
-                // linha[j] = tabuleiro[i][j];
-                tabuleiro[i][j] = linha[j];
+void lerTabuleiro(const char *arquivo) {
+    FILE *file = fopen(arquivo, "r");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo\n");
+        exit(1);
+    } else {
+        fscanf(file, "%d %d", &numeroLinhas, &numeroColunas);
+        for (int i = 0; i < numeroLinhas; i++) {
+            for (int j = 0; j < numeroColunas; j++) {
+                fscanf(file, " %c", &tabuleiro[i][j]);
+                tabuleiro[i][j] = tabuleiro[i][j];
             }
         }
+    }
+
+    fclose(file);
+}
+
+void lerPalavras(const char *arquivoParametro, Trie *raiz) {
+    FILE *arquivo = fopen(arquivoParametro, "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir lista de palavras\n");
+        return;
+    }
+     
+    char palavra[30];
+    while (fgets(palavra, sizeof(palavra), arquivo)) {
+        palavra[strcspn(palavra, "\n")] = '\0'; 
+        inserirTrie(raiz, palavra);
     }
 
     fclose(arquivo);

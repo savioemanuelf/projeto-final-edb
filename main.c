@@ -4,7 +4,6 @@
 
 #include "cabecalhos/aux.h"
 #include "cabecalhos/jogo.h"
-#include "cabecalhos/trie.h"
 
 int main() {
     Trie* trie = criarTrie();
@@ -25,7 +24,7 @@ int main() {
             lerTabuleiro("tabuleiro.txt");
             // carregarPalavrasTrie("palavras.txt", trie); 
             buscarPalavras(trie, &avl);
-            imprimirArvOrdem(avl);
+            // imprimirArvOrdem(avl);
             imprimirResultados(avl);
             getchar();
 

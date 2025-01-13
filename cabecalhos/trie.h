@@ -14,4 +14,5 @@ void inserirPalavraTrie(Trie* raiz, const char* palavra); // insere palavra na t
 void carregarPalavrasTrie(const char *arquivo, Trie *raiz); // Carrega palavras de um arquivo e insere na arvore trie utilizando
 // a função inserirPalavraTrie
 bool buscarPalavra(Trie* raiz, const char* palavra); // busca palavra na trie
+void liberarTrie(Trie *);
 #endif // TRIE_H

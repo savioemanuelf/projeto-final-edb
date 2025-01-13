@@ -35,47 +35,45 @@ void carregarPalavrasTrie(const char *arquivoParametro, Trie *raiz) {
     fclose(arquivo);
 }
 
-
-
-// void inserirPalavraTrie(Trie* raiz, const char* palavra) {
-//     if(raiz == NULL || palavra == NULL) {
-//         printf("Trie ou palavra sem valor\n");
-//         return;
-//     }
-
-//     // lógica implementada a partir do tries.c do sigaa
-//     Trie* atual = raiz;
-
-//     for(int i = 0; palavra[i] != '\0'; i++){
-//         int indice = palavra[i] - 'a';
-//         if (indice < 0 || indice >= ALFABETO) {
-//             printf("Caractere inválido na palavra: %c\n", palavra[i]);
-//             return;
-//         }
-//         if(atual->letras[indice] == NULL)
-//         atual->letras[indice] = criarTrie();
-
-//         atual = atual->letras[indice];
-//   }
-  
-//     atual->final_palavra = true;
-// }
-
 void inserirPalavraTrie(Trie* raiz, const char* palavra) {
-    Trie* atual = raiz;
-
-    while (*palavra) {
-        int indice = *palavra - 'a';
-        if (atual->letras[indice] == NULL) {
-            atual->letras[indice] = criarTrie();
-        }
-
-        atual = atual->letras[indice];
-        palavra++;
+    if(raiz == NULL || palavra == NULL) {
+        printf("Trie ou palavra sem valor\n");
+        return;
     }
 
+    // lógica implementada a partir do tries.c do sigaa
+    Trie* atual = raiz;
+
+    for(int i = 0; palavra[i] != '\0'; i++){
+        int indice = palavra[i] - 'a';
+        if (indice < 0 || indice >= ALFABETO) {
+            printf("Caractere inválido na palavra: %c\n", palavra[i]);
+            return;
+        }
+        if(atual->letras[indice] == NULL)
+        atual->letras[indice] = criarTrie();
+
+        atual = atual->letras[indice];
+  }
+  
     atual->final_palavra = true;
 }
+
+// void inserirPalavraTrie(Trie* raiz, const char* palavra) {
+//     Trie* atual = raiz;
+
+//     while (*palavra) {
+//         int indice = *palavra - 'a';
+//         if (atual->letras[indice] == NULL) {
+//             atual->letras[indice] = criarTrie();
+//         }
+
+//         atual = atual->letras[indice];
+//         palavra++;
+//     }
+
+//     atual->final_palavra = true;
+// }
 
 bool buscarPalavra(Trie* raiz, const char* palavra) {
     Trie* atual = raiz;
