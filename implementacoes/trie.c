@@ -25,39 +25,82 @@ void carregarPalavrasTrie(const char *arquivoParametro, Trie *raiz) {
         printf("Erro ao abrir lista de palavras\n");
         return;
     }
-     
-    char palavra[30];
-    while (fgets(palavra, sizeof(palavra), arquivo)) {
-        palavra[strcspn(palavra, "\n")] = '\0'; 
-        inserirPalavraTrie(raiz, palavra);
+
+    char linha[256];
+    printf("Carregando palavras na Trie:\n");
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        linha[strcspn(linha, "\n")] = '\0'; // Remove o '\n'
+
+        // Dividir a linha em palavras
+        char *palavra = strtok(linha, " ");
+        while (palavra != NULL) {
+            printf("- Inserindo: %s\n", palavra);
+
+            // Inserir cada palavra na Trie
+            inserirTrie(raiz, palavra);
+
+            // Próxima palavra
+            palavra = strtok(NULL, " ");
+        }
     }
 
     fclose(arquivo);
 }
 
-void inserirPalavraTrie(Trie* raiz, const char* palavra) {
-    if(raiz == NULL || palavra == NULL) {
-        printf("Trie ou palavra sem valor\n");
-        return;
+void testarBusca(Trie* raiz, const char* palavra) {
+    if (buscarPalavra(raiz, palavra)) {
+        printf("Palavra encontrada na Trie: %s\n", palavra);
+    } else {
+        printf("Palavra NÃO encontrada na Trie: %s\n", palavra);
     }
+}
 
-    // lógica implementada a partir do tries.c do sigaa
+
+// void inserirPalavraTrie(Trie* raiz, const char* palavra) {
+//     Trie* atual = raiz;
+
+//     printf("Inserindo palavra: %s\n", palavra);
+//     while (*palavra) {
+//         int indice = *palavra - 'a';
+//         if (indice < 0 || indice >= ALFABETO) {
+//             printf("Caractere inválido na palavra: %c\n", *palavra);
+//             return;
+//         }
+
+//         if (atual->letras[indice] == NULL) {
+//             atual->letras[indice] = criarTrie();
+//         }
+
+//         atual = atual->letras[indice];
+//         palavra++;
+//     }
+
+//     atual->final_palavra = true;
+// }
+
+void inserirTrie(Trie* raiz, const char* palavra) {
     Trie* atual = raiz;
 
-    for(int i = 0; palavra[i] != '\0'; i++){
-        int indice = palavra[i] - 'a';
-        if (indice < 0 || indice >= ALFABETO) {
-            printf("Caractere inválido na palavra: %c\n", palavra[i]);
+    printf("Inserindo na Trie: %s\n", palavra);
+    while (*palavra) {
+        if (*palavra < 'a' || *palavra > 'z') {
+            printf("Caractere inválido na palavra: %c\n", *palavra);
             return;
         }
-        if(atual->letras[indice] == NULL)
-        atual->letras[indice] = criarTrie();
+
+        int indice = *palavra - 'a';
+        if (atual->letras[indice] == NULL) {
+            atual->letras[indice] = criarTrie();
+        }
 
         atual = atual->letras[indice];
-  }
-  
+        palavra++;
+    }
+
     atual->final_palavra = true;
+    printf("Palavra inserida com sucesso: %s\n", palavra);
 }
+
 
 // void inserirPalavraTrie(Trie* raiz, const char* palavra) {
 //     Trie* atual = raiz;

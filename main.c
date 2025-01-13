@@ -22,12 +22,15 @@ int main() {
         case 1:
             opcaoSelecionada(1);
             lerTabuleiro("tabuleiro.txt");
-            // carregarPalavrasTrie("palavras.txt", trie); 
+            carregarPalavrasTrie("palavras.txt", trie); 
             buscarPalavras(trie, &avl);
             // imprimirArvOrdem(avl);
             imprimirResultados(avl);
             getchar();
-
+            testarBusca(trie, "agape");
+             testarBusca(trie, "europa");
+            testarBusca(trie, "leda");
+            
             break;
         case 2:
             opcaoSelecionada(2);
@@ -50,7 +53,7 @@ int main() {
             scanf(" %s", palavra);
             
             printf("\nAntes da remoção:\n");
-            imprimirArvOrdem(avl);  // Função para imprimir a árvore
+            imprimirArvOrdem(avl);  
 
             // Remover a palavra
             avl = removerPalavraAVL(avl, palavra);

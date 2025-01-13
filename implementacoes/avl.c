@@ -92,19 +92,21 @@ ArvAVL *balancearNo(ArvAVL *no) {
 }
 
 ArvAVL *inserirPalavraAVL(ArvAVL *raiz, const char *palavra) {
+    printf("Inserindo na AVL: %s\n", palavra);
     if (raiz == NULL) {
         return criarArvAVL(palavra);
     }
+
     if (strcmp(palavra, raiz->palavra) < 0) {
         raiz->esquerdo = inserirPalavraAVL(raiz->esquerdo, palavra);
     } else if (strcmp(palavra, raiz->palavra) > 0) {
         raiz->direito = inserirPalavraAVL(raiz->direito, palavra);
-    } else {
-        return raiz;
     }
+
     raiz->altura = 1 + maior(altura(raiz->esquerdo), altura(raiz->direito));
     return balancearNo(raiz);
 }
+
 
 ArvAVL *removerPalavraAVL(ArvAVL *raiz, const char *palavra) {
     if (raiz == NULL) {
