@@ -7,7 +7,8 @@ typedef struct ArvAVL {
 } ArvAVL;
 
 ArvAVL* criarArvAVL(const char* palavra); // Cria arvore avl
-ArvAVL* inserirAVL(ArvAVL* raiz, const char* palavra); // Insere na arvore avl uma palavra
+ArvAVL* inserirPalavraAVL(ArvAVL* raiz, const char* palavra); // Insere na arvore avl uma palavra
+ArvAVL* removerPalavraAVL(ArvAVL* raiz, const char* palavra); // Remove palavra na arvore
 void imprimirArvOrdem(ArvAVL* raiz); // Imprime a arvore em ordem
 void liberarArvore(ArvAVL* raiz); // Libera memória da arvore'
 

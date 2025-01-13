@@ -91,16 +91,47 @@ ArvAVL *balancearNo(ArvAVL *no) {
     return no;
 }
 
-ArvAVL *inserirAVL(ArvAVL *raiz, const char *palavra) {
+ArvAVL *inserirPalavraAVL(ArvAVL *raiz, const char *palavra) {
     if (raiz == NULL) {
         return criarArvAVL(palavra);
     }
     if (strcmp(palavra, raiz->palavra) < 0) {
-        raiz->esquerdo = inserirAVL(raiz->esquerdo, palavra);
+        raiz->esquerdo = inserirPalavraAVL(raiz->esquerdo, palavra);
     } else if (strcmp(palavra, raiz->palavra) > 0) {
-        raiz->direito = inserirAVL(raiz->direito, palavra);
+        raiz->direito = inserirPalavraAVL(raiz->direito, palavra);
     } else {
         return raiz;
+    }
+    raiz->altura = 1 + maior(altura(raiz->esquerdo), altura(raiz->direito));
+    return balancearNo(raiz);
+}
+
+ArvAVL *removerPalavraAVL(ArvAVL *raiz, const char *palavra) {
+    if (raiz == NULL) {
+        return raiz;
+    }
+    if (strcmp(palavra, raiz->palavra) < 0) {
+        raiz->esquerdo = removerPalavraAVL(raiz->esquerdo, palavra);
+    } else if (strcmp(palavra, raiz->palavra) > 0) {
+        raiz->direito = removerPalavraAVL(raiz->direito, palavra);
+    } else {
+        if (raiz->esquerdo == NULL || raiz->direito == NULL) {
+            ArvAVL *temp = raiz->esquerdo ? raiz->esquerdo : raiz->direito;
+            if (temp == NULL) {
+                temp = raiz;
+                raiz = NULL;
+            } else {
+                *raiz = *temp;
+            }
+            free(temp);
+        } else {
+            ArvAVL *temp = raiz->direito;
+            while (temp->esquerdo != NULL) {
+                temp = temp->esquerdo;
+            }
+            strcpy(raiz->palavra, temp->palavra);
+            raiz->direito = removerPalavraAVL(raiz->direito, temp->palavra);
+        }
     }
     raiz->altura = 1 + maior(altura(raiz->esquerdo), altura(raiz->direito));
     return balancearNo(raiz);

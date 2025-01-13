@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../cabecalhos/jogo.h"
-#include "avl.h"
-#include "trie.h"
+#include "../cabecalhos/avl.h"
+#include "../cabecalhos/trie.h"
 
 char tabuleiro[MAX][MAX];
 int numeroLinhas, numeroColunas;
@@ -20,25 +20,10 @@ void lerTabuleiro(const char *arquivoParametro) {
     for (int i = 0; i < numeroLinhas; i++) {
         if(fgets(linha, sizeof(linha), arquivo)) {
             for (int j = 0; j < numeroColunas; j++) { // substituir por numeroColunas para permitir tabuleiros nao quadrados
-                linha[j] = tabuleiro[i][j];
+                // linha[j] = tabuleiro[i][j];
+                tabuleiro[i][j] = linha[j];
             }
         }
-    }
-
-    fclose(arquivo);
-}
-
-void lerPalavras(const char *arquivoParametro, Trie *raiz) {
-    FILE *arquivo = fopen(arquivoParametro, "r");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir lista de palavras\n");
-        return;
-    }
-     
-    char palavra[30];
-    while (fgets(palavra, sizeof(palavra), arquivo)) {
-        palavra[strcspn(palavra, "\n")] = '\0'; 
-        inserirTrie(raiz, palavra);
     }
 
     fclose(arquivo);
@@ -54,7 +39,7 @@ void buscarDirecao(Trie *trie, ArvAVL **avl, int dx, int dy) {
                 palavra[len++] = tabuleiro[x][y];
                 palavra[len] = '\0';
                 if (buscarPalavra(trie, palavra)) {
-                    *avl = inserirAVL(*avl, palavra);
+                    *avl = inserirPalavraAVL(*avl, palavra);
                 }
                 x += dx;
                 y += dy;
@@ -80,7 +65,6 @@ void buscarPalavras(Trie *trie, ArvAVL **avl) {
     buscarDirecao(trie, avl, -1, -1); // direitaBaixo0>esquerdaCima
 
 }
-
 
 void imprimirResultados(ArvAVL *avl) {
     printf("Palavras encontradas:\n");

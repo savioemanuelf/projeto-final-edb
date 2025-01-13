@@ -21,7 +21,8 @@ void exibirMenu() {
     printf("2. Inserir palavra a ser buscada\n");
     printf("3. Exibir tabuleiro\n");
     printf("4. Exibir lista de palavras\n");
-    printf("5. Sair\n");
+    printf("5. Remover palavra da AVL\n");
+    printf("6. Sair\n");
     printf("Escolha uma opcao: ");
 }
 
