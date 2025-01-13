@@ -4,7 +4,7 @@
 
 #include "cabecalhos/aux.h"
 #include "cabecalhos/jogo.h"
-
+#include "cabecalhos/trie.h"
 
 int main() {
     Trie* trie = criarTrie();
@@ -12,7 +12,7 @@ int main() {
 
     int opcao = 0;
 
-    while (opcao != 5){
+    while (opcao != 6){
         printf("\n\nPressione enter para limpar o terminal e ver o menu: \n");
         getchar();
         exibirMenu();
@@ -23,15 +23,12 @@ int main() {
         case 1:
             opcaoSelecionada(1);
             lerTabuleiro("tabuleiro.txt");
-            lerPalavras("palavras.txt", trie); 
+            // carregarPalavrasTrie("palavras.txt", trie); 
             buscarPalavras(trie, &avl);
+            imprimirArvOrdem(avl);
             imprimirResultados(avl);
             getchar();
 
-            printf("\n\n");
-            exibirTabuleiro();
-            printf("\n\n");
-            exibirPalavras();
             break;
         case 2:
             opcaoSelecionada(2);
@@ -48,6 +45,25 @@ int main() {
             getchar();
             break;
         case 5:
+            opcaoSelecionada(5);
+            char palavra[30];
+            printf("\nDigite a palavra que deseja remover da AVL: ");
+            scanf(" %s", palavra);
+            
+            printf("\nAntes da remoção:\n");
+            imprimirArvOrdem(avl);  // Função para imprimir a árvore
+
+            // Remover a palavra
+            avl = removerPalavraAVL(avl, palavra);
+
+            printf("\nDepois da remoção:\n");
+            imprimirArvOrdem(avl);  // Função para imprimir a árvore
+
+            sleep(3);
+            break;
+        case 6:
+            liberarArvore(avl);
+            liberarTrie(trie);
             printf("Saindo do programa...");
             sleep(1.5);
             break;
