@@ -1,31 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "../cabecalhos/jogo.h"
-#include "avl.h"
-#include "trie.h"
+#include "../cabecalhos/avl.h"
+#include "../cabecalhos/trie.h"
 
 char tabuleiro[MAX][MAX];
 int numeroLinhas, numeroColunas;
 
-void lerTabuleiro(const char *arquivoParametro) {
-    FILE *arquivo = fopen(arquivoParametro, "r");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir o tabuleiro\n");
-        return;
-    } 
-  
-    char linha[MAX];
-    fscanf(arquivo, "%d %d", &numeroLinhas, &numeroColunas);
-    for (int i = 0; i < numeroLinhas; i++) {
-        if(fgets(linha, sizeof(linha), arquivo)) {
-            for (int j = 0; j < numeroColunas; j++) { // substituir por numeroColunas para permitir tabuleiros nao quadrados
-                linha[j] = tabuleiro[i][j];
+void lerTabuleiro(const char *arquivo) {
+    FILE *file = fopen(arquivo, "r");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo\n");
+        exit(1);
+    } else {
+        fscanf(file, "%d %d", &numeroLinhas, &numeroColunas);
+        for (int i = 0; i < numeroLinhas; i++) {
+            for (int j = 0; j < numeroColunas; j++) {
+                fscanf(file, " %c", &tabuleiro[i][j]);
+                tabuleiro[i][j] = tabuleiro[i][j];
             }
         }
     }
 
-    fclose(arquivo);
+    fclose(file);
 }
 
 void lerPalavras(const char *arquivoParametro, Trie *raiz) {
@@ -54,7 +53,7 @@ void buscarDirecao(Trie *trie, ArvAVL **avl, int dx, int dy) {
                 palavra[len++] = tabuleiro[x][y];
                 palavra[len] = '\0';
                 if (buscarPalavra(trie, palavra)) {
-                    *avl = inserirAVL(*avl, palavra);
+                    *avl = inserirPalavraAVL(*avl, palavra);
                 }
                 x += dx;
                 y += dy;
@@ -80,7 +79,6 @@ void buscarPalavras(Trie *trie, ArvAVL **avl) {
     buscarDirecao(trie, avl, -1, -1); // direitaBaixo0>esquerdaCima
 
 }
-
 
 void imprimirResultados(ArvAVL *avl) {
     printf("Palavras encontradas:\n");
