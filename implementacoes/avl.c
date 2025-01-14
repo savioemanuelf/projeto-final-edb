@@ -128,11 +128,11 @@ ArvAVL *removerPalavraAVL(ArvAVL *raiz, const char *palavra) {
     } else if (strcmp(palavra, raiz->palavra) > 0) {
         raiz->direito = removerPalavraAVL(raiz->direito, palavra);
     } else {
-        // Nó com apenas um filho ou nenhum.
+        // nó com apenas um filho ou nenhum.
         if (raiz->esquerdo == NULL || raiz->direito == NULL) {
             ArvAVL *temp = raiz->esquerdo ? raiz->esquerdo : raiz->direito;
 
-            // Caso de nenhum filho
+            // caso de nenhum filho
             if (temp == NULL) {
                 temp = raiz;
                 raiz = NULL;
@@ -142,48 +142,48 @@ ArvAVL *removerPalavraAVL(ArvAVL *raiz, const char *palavra) {
             }
             free(temp);
         } else {
-            // Caso de dois filhos: obtém o sucessor
+            // caso de dois filhos: obtém o sucessor
             ArvAVL *temp = raiz->direito;
             while (temp->esquerdo != NULL) {
                 temp = temp->esquerdo;
             }
 
-            // Copia o sucessor para o nó a ser removido
+            // copiando sucessor para o nó que vais ser removido
             strcpy(raiz->palavra, temp->palavra);
 
-            // Remove o sucessor
+            // removendo sucessor
             raiz->direito = removerPalavraAVL(raiz->direito, temp->palavra);
         }
     }
 
-    // Se a árvore tinha apenas um nó
+    // se a arvore tinha apenas um nó
     if (raiz == NULL) {
         return raiz;
     }
 
-    // Atualiza a altura do nó atual
+    // atualizando a altura do nó atual
     raiz->altura = 1 + max(obterAltura(raiz->esquerdo), obterAltura(raiz->direito));
 
-    // Balanceia a árvore, se necessário
+    // balanceando a árvore
     int balanceamento = calcularFatorBalanceamento(raiz);
 
-    // Caso 1: Desbalanceamento a esquerda (rotacao a direita)
+    // caso 1: desbalanceamento a esquerda (rotacao a direita)
     if (balanceamento > 1 && calcularFatorBalanceamento(raiz->esquerdo) >= 0) {
         return rotacaoDireita(raiz);
     }
 
-    // Caso 2: Desbalanceamento esquerda-direita (rotacao dupla esquerda-direita)
+    // caso 2: desbalanceamento esquerda-direita (rotacao dupla esquerda-direita)
     if (balanceamento > 1 && calcularFatorBalanceamento(raiz->esquerdo) < 0) {
         raiz->esquerdo = rotacaoEsquerda(raiz->esquerdo);
         return rotacaoDireita(raiz);
     }
 
-    // Caso 3: Desbalanceamento a direita (rotacao a esquerda)
+    // caso 3: desbalanceamento a direita (rotacao a esquerda)
     if (balanceamento < -1 && calcularFatorBalanceamento(raiz->direito) <= 0) {
         return rotacaoEsquerda(raiz);
     }
 
-    // Caso 4: Desbalanceamento direita-esquerda (rotacao dupla direita-esquerda)
+    // caso 4: desbalanceamento direita-esquerda (rotacao dupla direita-esquerda)
     if (balanceamento < -1 && calcularFatorBalanceamento(raiz->direito) > 0) {
         raiz->direito = rotacaoDireita(raiz->direito);
         return rotacaoEsquerda(raiz);
