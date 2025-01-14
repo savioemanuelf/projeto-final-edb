@@ -4,6 +4,10 @@
 #include <unistd.h> 
 #include "../cabecalhos/aux.h"
 
+#ifdef _WIN32
+    #define WIN_32
+#endif
+
 void limparTerminal() {
     #ifdef WIN_32
         system("cls");
